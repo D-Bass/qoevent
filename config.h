@@ -1,0 +1,1 @@
+#define MAX_RACES_PER_EVENT 30

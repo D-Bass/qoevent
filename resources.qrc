@@ -1,0 +1,38 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/globus.png</file>
+        <file>icons/micon.gif</file>
+        <file>icons/micon.ico</file>
+        <file>icons/add-user.png</file>
+        <file>icons/remove-user.png</file>
+        <file>icons/html.png</file>
+        <file>icons/remove-team.png</file>
+        <file>icons/add-team.png</file>
+        <file>icons/remove.png</file>
+        <file>icons/add.png</file>
+        <file>icons/remove-cc.png</file>
+        <file>icons/add-cc.png</file>
+        <file>icons/remove-course.png</file>
+        <file>icons/add-course.png</file>
+        <file>icons/edit.png</file>
+        <file>icons/landscape.png</file>
+        <file>icons/check.png</file>
+        <file>icons/add-control-point.png</file>
+        <file>icons/remove-control-point.png</file>
+        <file>icons/edit-pencil.png</file>
+        <file>icons/assign-chip.png</file>
+        <file>icons/download-chip.png</file>
+        <file>icons/remove-file.png</file>
+        <file>icons/add-file.png</file>
+        <file>base_creat.txt</file>
+        <file>icons/assign-value.png</file>
+        <file>icons/unassign-chip.png</file>
+        <file>icons/settings.png</file>
+        <file>trans_ru.qm</file>
+        <file>icons/update.png</file>
+        <file>icons/filter.png</file>
+        <file>icons/search.png</file>
+        <file>icons/run.png</file>
+        <file>icons/remove-protocol.png</file>
+    </qresource>
+</RCC>

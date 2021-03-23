@@ -1,0 +1,39 @@
+﻿CREATE TABLE team ( team_id INTEGER, name TEXT, class_id INTEGER, PRIMARY KEY(team_id), FOREIGN KEY(class_id) REFERENCES class(class_id),unique(name,class_id));
+
+CREATE TABLE team_member(tm_id INTEGER, team_id INTEGER NOT NULL , comp_id INTEGER NOT NULL, skill_id INTEGER , number TEXT, PRIMARY KEY(tm_id), FOREIGN KEY(team_id) REFERENCES team(team_id),FOREIGN KEY(comp_id) REFERENCES competitor(comp_id), UNIQUE(comp_id,team_id));
+
+CREATE TABLE skill ( skill_id INTEGER, name TEXT NOT NULL, PRIMARY KEY(skill_id));
+
+CREATE TABLE race (race_id INTEGER, name TEXT NOT NULL, event_id INTEGER, location TEXT, date INTEGER, officials TEXT, protocol_closed INTEGER DEFAULT 0, sort_order INTEGER DEFAULT 0, PRIMARY KEY(race_id), FOREIGN KEY( event_id ) REFERENCES event ( event_id ));
+
+CREATE TABLE protocol (prot_id INTEGER, tm_id INTEGER, start_time INTEGER,start_time_forced INTEGER,start_time_selector INTEGER DEFAULT 0,finish_time INTEGER, lap INTEGER, chip TEXT, score INTEGER, penalty INTEGER, total_time INTEGER, PRIMARY KEY(prot_id), FOREIGN KEY(tm_id) REFERENCES team_member (tm_id) ON DELETE CASCADE, UNIQUE (tm_id,lap));
+
+CREATE TABLE split (prot_id INTEGER, cp_id INTEGER, time INTEGER, FOREIGN KEY(cp_id) REFERENCES cp(cp_id),FOREIGN KEY(prot_id) REFERENCES protocol(prot_id),UNIQUE(cp_id,time,prot_id));
+
+CREATE TABLE event (event_id INTEGER, name TEXT NOT NULL, multirace INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(event_id));
+
+CREATE TABLE discipline ( disc_id INTEGER, name TEXT NOT NULL, PRIMARY KEY(disc_id));
+
+CREATE TABLE cp ( cp_id INTEGER, race_id INTEGER, int_number INTEGER, map_alias TEXT NOT NULL, value INTEGER DEFAULT 0,penalty INTEGER DEFAULT 0, lat REAL, lon REAL, x INTEGER , y INTEGER, desc TEXT, PRIMARY KEY(cp_id), FOREIGN KEY( race_id ) REFERENCES race ( race_id ), UNIQUE (map_alias,race_id));
+
+CREATE TABLE course ( course_id INTEGER, name TEXT, race_id INTEGER, soft_order INTEGER DEFAULT 0, min_penalty INTEGER default 0, max_penalty INTEGER default 0,min_score INTEGER default 0,value_is_time INTEGER default 0,penalty_is_time INTEGER default 0, overtime INTEGER,overtime_penalty INTEGER, max_punch_interval INTEGER, PRIMARY KEY(course_id), FOREIGN KEY(race_id) REFERENCES race(race_id), UNIQUE (name,race_id));
+
+CREATE TABLE course_data (course_id INTEGER,cp_id INTEGER,ord INTEGER DEFAULT 0,value INTEGER DEFAULT 0,penalty INTEGER DEFAULT 0,cutoff INTEGER default 0,FOREIGN KEY(course_id) REFERENCES course(course_id) ON DELETE CASCADE ,FOREIGN KEY(cp_id) REFERENCES cp(cp_id));
+
+CREATE TABLE class ( class_id INTEGER, race_id INTEGER, name TEXT NOT NULL , PRIMARY KEY(class_id),FOREIGN KEY(race_id) REFERENCES race(race_id), UNIQUE (name,race_id));
+
+CREATE TABLE clscrs ( clscrs_id INTEGER, class_id INTEGER, disc_id INTEGER, lap INTEGER DEFAULT 0, course_id INTEGER , PRIMARY KEY(clscrs_id), FOREIGN KEY( class_id ) REFERENCES class ( class_id ),FOREIGN KEY( disc_id ) REFERENCES discipline (disc_id), FOREIGN KEY( course_id ) REFERENCES course ( course_id ), UNIQUE(class_id,disc_id,course_id,lap));
+
+CREATE TABLE competitor ( comp_id INTEGER, name TEXT NOT NULL, skill_id TEXT, city TEXT, region TEXT, birthdate INTEGER, phone TEXT, club TEXT, PRIMARY KEY(comp_id), UNIQUE (name,birthdate));
+
+CREATE TABLE class_default ( id INTEGER, list TEXT, PRIMARY KEY(id));
+INSERT INTO discipline(name) VALUES ("single")
+INSERT INTO discipline(name) VALUES ("unordered")
+INSERT INTO discipline(name) VALUES ("relay")
+INSERT INTO discipline(name) VALUES ("oscore")
+INSERT INTO discipline(name) VALUES ("oscore_mod")
+INSERT INTO class_default(list) VALUES ("M12,F12,M14,F14,M18,F18,M20,F20,M21,F21,M40,F40,M60,F60,EXPERT")
+
+create trigger unique_chip_in_race before update of chip on protocol when (with t as (select race_id as raceid,prot_id as protid,chip as chip from protocol join team_member using(tm_id) join team using(team_id) join class using (class_id))  select(select raceid from t where protid==old.prot_id) in (select raceid from t where chip=new.chip))==1 begin select raise(abort,'uniqie chip in race constrain failed');end
+create trigger unique_competitor_in_race_insert before insert on team_member when            (with t as (select race_id as raceid,comp_id as compid,team_id as teamid  from class left join team using(class_id) left join team_member using(team_id)) select(select raceid from t where teamid==new.team_id) in (select raceid from t where compid=new.comp_id))==1 begin select raise(abort,'uniqie competitor in race constrain failed');end
+create trigger unique_competitor_in_race_update before update of comp_id on team_member when (with t as (select race_id as raceid,comp_id as compid,team_id as teamid  from class left join team using(class_id) left join team_member using(team_id)) select(select raceid from t where teamid==new.team_id) in (select raceid from t where compid=new.comp_id))==1 begin select raise(abort,'uniqie competitor in race constrain failed');end
