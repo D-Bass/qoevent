@@ -81,4 +81,4 @@ RESOURCES += \
     resources.qrc
 
 win32:RC_ICONS += icons/micon.ico
-win32:LIBS += "G:\Qt\Tools\mingw530_32\i686-w64-mingw32\lib\libwinspool.a"
+win32:LIBS += -lwinspool
