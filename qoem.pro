@@ -22,6 +22,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+LRELEASE_DIR = I18n/
+CONFIG += lrelease
+CONFIG -= debug_and_release debug_and_release_target
+
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -82,13 +86,13 @@ RESOURCES += \
 
 TRANSLATIONS = i18n/qomanager_ru.ts
 
-COPY_CONFIG = $$files(i18n/*.qm, true)
-copy_cmd.input = COPY_CONFIG
-copy_cmd.output = i18n/${QMAKE_FILE_IN_BASE}${QMAKE_FILE_EXT}
-copy_cmd.commands = $$QMAKE_COPY_FILE ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
-copy_cmd.CONFIG += no_link_no_clean
-copy_cmd.variable_out = PRE_TARGETDEPS
-QMAKE_EXTRA_COMPILERS += copy_cmd
+#COPY_CONFIG = $$files(i18n/*.qm, true)
+#copy_cmd.input = COPY_CONFIG
+#copy_cmd.output = i18n/${QMAKE_FILE_IN_BASE}${QMAKE_FILE_EXT}
+#copy_cmd.commands = $$QMAKE_COPY_FILE ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
+#copy_cmd.CONFIG += no_link_no_clean
+#copy_cmd.variable_out = PRE_TARGETDEPS
+#QMAKE_EXTRA_COMPILERS += copy_cmd
 
 win32:RC_ICONS += icons/micon.ico
 win32:LIBS += -lwinspool
