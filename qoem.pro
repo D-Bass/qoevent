@@ -8,7 +8,7 @@ QT       += core gui sql serialport printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = qOManager
+TARGET = qomanager
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -79,6 +79,16 @@ HEADERS  += mainwindow.h \
 
 RESOURCES += \
     resources.qrc
+
+TRANSLATIONS = i18n/qomanager_ru.ts
+
+COPY_CONFIG = $$files(i18n/*.qm, true)
+copy_cmd.input = COPY_CONFIG
+copy_cmd.output = i18n/${QMAKE_FILE_IN_BASE}${QMAKE_FILE_EXT}
+copy_cmd.commands = $$QMAKE_COPY_FILE ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
+copy_cmd.CONFIG += no_link_no_clean
+copy_cmd.variable_out = PRE_TARGETDEPS
+QMAKE_EXTRA_COMPILERS += copy_cmd
 
 win32:RC_ICONS += icons/micon.ico
 win32:LIBS += -lwinspool
